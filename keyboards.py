@@ -1,6 +1,13 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 
+# Клавиатура - Меню
+async def menu():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="✈️ Построить Маршрут"), KeyboardButton(text="👤 ")],
+            [KeyboardButton(text="👥 "), KeyboardButton(text="✈️ ")]], resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
+
 async def city_origin():
     return InlineKeyboardMarkup(inline_keyboard=
         [[
