@@ -5,40 +5,26 @@ from aiogram.filters import CommandStart
 
 
 import keyboards as kb
-from config import ADMIN_TELEGRAM_ID
 
 router_u = Router()
 
 
 @router_u.message(CommandStart())
 async def cmd_start(message: Message):
-    if message.from_user.id == ADMIN_TELEGRAM_ID:
-        await message.answer(f'Привет 👋🏼,\nЯ - чат-бот АВИАКОМПАНИИ\n\n'
-                             f'Я могу показать и взаимодействовать: \n\n'
-                             f'• Кассами\n'  
-                             f'• Кассирами\n'
-                             f'• Клиентами\n'
-                             f'• Купонами\n'
-                             f'• Билетами\n\n'
+    await message.answer(f'Привет 👋🏼,\nЯ - чат-бот Travel Tracker\n\n'
+                             f'Что умеет этот бот?: \n\n'
+                             f'• Мы можем построить дальний маршрут из точки А в точку Б\n'  
+                             f'• Вы сможете увидеть актуальную информацию об автобусных, железнодорожных и аэро-маршрутах в России\n'
+
                              f'А также предостовить информацию по авиакомпниям')
-        await message.answer(f'🔮 Главное меню', reply_markup=await kb.menu())
-    else:
-        await message.answer(f'Меню администратора\n\n'
-                             f'Я могу показать и взаимодействовать\n'
-                             f'• Кассами\n'
-                             f'• Кассиры\n'
-                             f'• Клиентами\n'
-                             f'• Купонами\n'
-                             f'• Билетами\n'
-                             f'Отчёты и взаимойдествия с авиакомпаниями по команде /commands')
-        await message.answer(f'🔮 Главное меню', reply_markup=await kb.menu())
+    await message.answer(f'🔮 Главное меню', reply_markup=await kb.menu())
+
         
-        
-@router_u.message(F.text == '💳 Касса')
+@router_u.message(F.text == 'Построить маршрут')
 async def Kassa(message: Message):
     await message.answer(f'Выберите кассу, чтобы узнать подробную информацию:', reply_markup=await kb.kassa())
 
-@router_u.callback_query(F.data.startswith("kassa_number:"))
+@router_u.callback_query(F.data.startswith("city.origin_"))
 async def Kassa_inf(query: CallbackQuery):
-    kassa_id = int(query.data.split(":")[1])
+    city_origin = int(query.data.split("_")[1])
     await query.message.answer("Касса не найдена.", reply_markup=await kb.return_to_menu())
