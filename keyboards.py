@@ -1,13 +1,18 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
-
 # Клавиатура - Меню
 async def menu():
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="✈️ Построить Маршрут"), KeyboardButton(text="👤 ")],
-            [KeyboardButton(text="👥 "), KeyboardButton(text="✈️ ")]], resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
+            [KeyboardButton(text="👥 "), KeyboardButton(text="👥 ")]], 
+        resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
 
+# Клавиатура для возврата в меню
+async def return_to_menu():
+    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
+
+# Клавиатура со списком городов - вылет
 async def city_origin():
     return InlineKeyboardMarkup(inline_keyboard=
         [[
@@ -22,6 +27,7 @@ async def city_origin():
         ],[
         InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
 
+# Клавиатура со списком городов - прилет
 async def city_destination(city_origin):
     return InlineKeyboardMarkup(inline_keyboard=
         [[
@@ -35,6 +41,3 @@ async def city_destination(city_origin):
         InlineKeyboardButton(text="Новосибирск", callback_data=f"city.destination_OVB_{city_origin}")
         ],[
         InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
-
-async def return_to_menu():
-    return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
