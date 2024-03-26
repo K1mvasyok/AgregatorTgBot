@@ -25,7 +25,16 @@ async def Return_to_menu(query: CallbackQuery):
 async def Сity_origin_botton(message: Message):
     await message.answer(f'Выберите город отправления:', reply_markup=await kb.city_origin())
 
+# Продолжение работы с построением маршрутов - города вылете
 @router_u.callback_query(F.data.startswith("city.origin_"))
 async def City_destination_botton(query: CallbackQuery):
     city_origin = query.data.split("_")[1]
     await query.message.answer(f'Выберите город ?прилета?:', reply_markup=await kb.city_destination(city_origin))
+
+# Продолжение работы с построением маршрутов - города прилёта    
+@router_u.callback_query(F.data.startswith("city.destination_"))
+async def City_destination_botton(query: CallbackQuery):
+    city_destination_origin = query.data.split("_")[1]
+    await query.message.answer(f'Выберите город ?прилета?:', reply_markup=await kb.city_destination(city_destination_origin))
+    
+    
