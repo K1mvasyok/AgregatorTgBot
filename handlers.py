@@ -74,13 +74,20 @@ async def Airlines_info(query: CallbackQuery):
                                reply_markup=await kb.airlines_start(day_month_year_city_destination_origin))
     
 # Продолжение работы с построением маршрутов - месяц прилёта 
-# @router_u.callback_query(F.data.startswith("airlines_back_"))
-# async def Airlines_back_month(query: CallbackQuery):
-#     day_month_year_city_destination_origin = query.data.split("_")[1]
-#     await query.message.answer(f'Месяц прилёта:', reply_markup=await kb.back_month(day_month_year_city_destination_origin))
+@router_u.callback_query(F.data.startswith("airlines.back_"))
+async def Airlines_back_month(query: CallbackQuery):
+    day_month_year_city_destination_origin = query.data.split("_")[1]
+    await query.message.answer(f'Месяц прилёта:', reply_markup=await kb.back_month(day_month_year_city_destination_origin))
     
 # Продолжение работы с построением маршрутов - день прилёта 
 @router_u.callback_query(F.data.startswith("back.month_"))
 async def Airlines_back_month(query: CallbackQuery):
-    print(query.data)
-    a = query.data.split("_")[1]
+    backmonth_day_month_year_city_destination_origin = query.data.split("_")[1]
+    backmonth = int(backmonth_day_month_year_city_destination_origin.split(".")[0])
+    backyear = int(backmonth_day_month_year_city_destination_origin.split(".")[2])
+    await query.message.answer(f'День прилёта:', reply_markup=await kb.back_day(backmonth_day_month_year_city_destination_origin, backmonth, backyear)) 
+    
+@router_u.callback_query(F.data.startswith("back.day_"))
+async def Airlines_back_month(query: CallbackQuery):
+    day_backmonth_day_month_year_city_destination_origin = query.data.split("_")[1]
+    print(day_backmonth_day_month_year_city_destination_origin)

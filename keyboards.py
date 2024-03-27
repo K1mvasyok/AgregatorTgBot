@@ -83,7 +83,7 @@ async def time_day(month_year_city_destination_origin, month, year_offset=0):
 async def airlines_start(day_month_year_city_destination_origin):
     buttons = [
         [InlineKeyboardButton(text="🕒 Выбрать время", callback_data=f"sdgdf")],
-        [InlineKeyboardButton(text="🔁 Спланировать обратный маршрут", callback_data=f"airlines_back_{day_month_year_city_destination_origin}")],
+        [InlineKeyboardButton(text="🔁 Спланировать обратный маршрут", callback_data=f"airlines.back_{day_month_year_city_destination_origin}")],
         [InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
@@ -100,3 +100,18 @@ async def back_month(day_month_year_city_destination_origin):
         [InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+# Функция для создания клавиатуры выбора дня месяца
+async def back_day(backmonth_day_month_year_city_destination_origin, month, year_offset=0):
+    now = datetime.datetime.now()
+    year = now.year + year_offset  # Вычисляем год с учетом смещения
+    next_month = month + 1 if month < 12 else 1  # Учитываем переход на следующий год
+    next_year = year + 1 if month == 12 else year 
+    days_in_month = (datetime.date(next_year, next_month, 1) - datetime.date(year, month, 1)).days # Определение количества дней в выбранном месяце
+    buttons = []
+    for day in range(1, days_in_month + 1):
+        callback_data = f"back.day_{day}.{backmonth_day_month_year_city_destination_origin}"
+        buttons.append(InlineKeyboardButton(text=str(day), callback_data=callback_data))
+    keyboard_rows = [buttons[i:i+7] for i in range(0, days_in_month, 7)]
+    keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
