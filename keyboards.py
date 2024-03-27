@@ -47,7 +47,7 @@ async def city_destination(city_origin):
 async def time_year(city_destination_origin):
     buttons = [
         [InlineKeyboardButton(text="Да, в этом году", callback_data=f"time.year_0.{city_destination_origin}")],
-        [InlineKeyboardButton(text="Нет, в следующем", callback_data=f"time.month_1.{city_destination_origin}")],
+        [InlineKeyboardButton(text="Нет, в следующем", callback_data=f"time.year_1.{city_destination_origin}")],
         [InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)

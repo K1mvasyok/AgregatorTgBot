@@ -49,14 +49,13 @@ async def Time_month_botton(query: CallbackQuery):
 @router_u.callback_query(F.data.startswith("time.month_"))
 async def Time_day_botton(query: CallbackQuery):
     month_year_city_destination_origin = query.data.split("_")[1]
-    month = int(query.data.split("_")[1].split(".")[0])
+    month = int(month_year_city_destination_origin.split(".")[0])
     year = int(query.data.split(".")[2])
     await query.message.answer(f'День вылета:', reply_markup=await kb.time_day(month_year_city_destination_origin, month, year))
     
 @router_u.callback_query(F.data.startswith("time.day_"))
 async def Time_month_destination(query: CallbackQuery):
     day_month_year_city_destination_origin = query.data.split("_")[1]
-    print(day_month_year_city_destination_origin)
     day = int(day_month_year_city_destination_origin.split(".")[0])
     month = int(day_month_year_city_destination_origin.split(".")[1])
     
