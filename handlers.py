@@ -53,11 +53,12 @@ async def Time_day_botton(query: CallbackQuery):
     year = int(query.data.split(".")[2])
     await query.message.answer(f'День вылета:', reply_markup=await kb.time_day(month_year_city_destination_origin, month, year))
     
+# Продолжение работы с построением маршрутов - вывод информации
 @router_u.callback_query(F.data.startswith("time.day_"))
-async def Time_month_destination(query: CallbackQuery):
+async def Airlines_info(query: CallbackQuery):
     day_month_year_city_destination_origin = query.data.split("_")[1]
     day = int(day_month_year_city_destination_origin.split(".")[0])
-    month = int(day_month_year_city_destination_origin.split(".")[1])
+    month = day_month_year_city_destination_origin.split(".")[1]
     
     now = datetime.datetime.now()
     year_offset = int(day_month_year_city_destination_origin.split(".")[2])
@@ -68,6 +69,18 @@ async def Time_month_destination(query: CallbackQuery):
     
     await query.message.answer(f'Ваши данные:\n\n'
                                f'Дата вылета: {day}.{month}.{year}\n'
-                               f'Город вылета: {city_origin}\n'
-                               f'Город прилёта: {city_destination}', 
-                               reply_markup=await kb.airlines_start())
+                               f'Код города вылета: {city_origin}\n'
+                               f'Код город прилёта: {city_destination}', 
+                               reply_markup=await kb.airlines_start(day_month_year_city_destination_origin))
+    
+# Продолжение работы с построением маршрутов - месяц прилёта 
+# @router_u.callback_query(F.data.startswith("airlines_back_"))
+# async def Airlines_back_month(query: CallbackQuery):
+#     day_month_year_city_destination_origin = query.data.split("_")[1]
+#     await query.message.answer(f'Месяц прилёта:', reply_markup=await kb.back_month(day_month_year_city_destination_origin))
+    
+# Продолжение работы с построением маршрутов - день прилёта 
+@router_u.callback_query(F.data.startswith("back.month_"))
+async def Airlines_back_month(query: CallbackQuery):
+    print(query.data)
+    a = query.data.split("_")[1]
