@@ -11,10 +11,10 @@ router_u = Router()
 # Команда старт
 @router_u.message(CommandStart())
 async def Cmd_start(message: Message):
-    await message.answer(f'Привет 👋🏼,\nЯ - чат-бот Travel Tracker\n\n'
+    await message.answer(f'Привет 👋🏼,\nЯ - чат-бот TravelB\n\n'
                              f'Что умеет этот бот?: \n\n'
                              f'• Мы можем построить дальний маршрут из точки А в точку Б\n\n'  
-                             f'• Вы сможете увидеть актуальную информацию об автобусных, железнодорожных и аэро-маршрутах в России')
+                             f'• Вы сможете увидеть актуальную информацию аэро-маршрутах в России')
     await message.answer(f'🔮 Главное меню', reply_markup=await kb.menu())
 
 # Возврат в меню
@@ -37,10 +37,7 @@ async def City_destination_botton(query: CallbackQuery):
 @router_u.callback_query(F.data.startswith("city.destination_"))
 async def Time_year_botton(query: CallbackQuery):
     city_destination_origin = query.data.split("_")[1]
-    city_origin = query.data.split(".")[1]
-    city_destination = query.data.split(".")[0]
-    print(city_origin)
-    print(city_destination)
+    city_origin, city_destination = city_destination_origin.rsplit('.', 1)
     if city_origin == city_destination:
         await query.message.answer("Город отправления и город прибытия не могут совпадать.", reply_markup= await kb.return_to_menu())
         return
