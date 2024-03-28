@@ -37,6 +37,13 @@ async def City_destination_botton(query: CallbackQuery):
 @router_u.callback_query(F.data.startswith("city.destination_"))
 async def Time_year_botton(query: CallbackQuery):
     city_destination_origin = query.data.split("_")[1]
+    city_origin = query.data.split(".")[1]
+    city_destination = query.data.split(".")[0]
+    print(city_origin)
+    print(city_destination)
+    if city_origin == city_destination:
+        await query.message.answer("Город отправления и город прибытия не могут совпадать.", reply_markup= await kb.return_to_menu())
+        return
     await query.message.answer(f'Планируете полететь в этом году?', reply_markup=await kb.time_year(city_destination_origin))
     
 # Продолжение работы с построением маршрутов - месяц вылета   
@@ -90,4 +97,27 @@ async def Airlines_back_month(query: CallbackQuery):
 @router_u.callback_query(F.data.startswith("back.day_"))
 async def Airlines_back_month(query: CallbackQuery):
     day_backmonth_day_month_year_city_destination_origin = query.data.split("_")[1]
-    print(day_backmonth_day_month_year_city_destination_origin)
+    
+    city_origin = day_backmonth_day_month_year_city_destination_origin.split(".")[-1]
+    city_destination = day_backmonth_day_month_year_city_destination_origin.split(".")[-2]
+     
+    now = datetime.datetime.now()
+    year_offset = int(day_backmonth_day_month_year_city_destination_origin.split(".")[4])
+    year = now.year + year_offset
+    
+    day_start = int(day_backmonth_day_month_year_city_destination_origin.split(".")[2])
+    month_start = int(day_backmonth_day_month_year_city_destination_origin.split(".")[3])
+    
+    day_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[0])   
+    month_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[1])
+    
+    if datetime.datetime(year, month_start, day_start) >= datetime.datetime(year, month_end, day_end):
+        await query.message.answer("Дата отправления должна быть раньше даты прибытия.", reply_markup= await kb.return_to_menu())
+        return
+    
+    await query.message.answer(f'Ваши данные:\n\n'
+                               f'Дата вылета: {day_start}.{month_start}.{year}\n'
+                               f'Дата прилёта: {day_end}.{month_end}.{year}\n'
+                               f'Код города вылета: {city_origin}\n'
+                               f'Код город прилёта: {city_destination}',) 
+                            #    reply_markup=await kb.airlines_start())
