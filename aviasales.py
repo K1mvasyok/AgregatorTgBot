@@ -15,7 +15,7 @@ async def tickets_for_day(day, month, year, city_origin, city_destination):
     else:
         day = f"{day}"
         
-    response = requests.get(f"https://api.travelpayouts.com/aviasales/v3/prices_for_dates?departure_at={year}-{month}-{day}&origin={city_origin}&destination={city_destination}&token={api}&calendar_type=departure_date&limit=30")
+    response = requests.get(f"https://api.travelpayouts.com/aviasales/v3/prices_for_dates?departure_at={year}-{month}-{day}&origin={city_origin}&destination={city_destination}&token={api}&calendar_type=departure_date&limit=100")
     response_json = response.json()
     if response_json['success'] == True:
         formatted_info, links = format_ticket_info(response_json)
@@ -38,9 +38,12 @@ def format_flight_info(flight):
            f"💰 Цена: {flight['price']} ₽\n" 
 
 def format_ticket_info(ticket_data):
-    if ticket_data['data']:
-        flights_info = '\n'.join([format_flight_info(flight) for flight in ticket_data['data']])
-        links = [flight['link'] for flight in ticket_data['data']]
+    flights_info = ""
+    links = []
+    for flight in ticket_data['data']:
+        flights_info += format_flight_info(flight)
+        links.append(flight['link'])
+    if flights_info:
         return f"ℹ️ Информация о билете:\n{flights_info}", links
     else:
         return "ℹ️ Информация о билете: Нет доступных билетов", []

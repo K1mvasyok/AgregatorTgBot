@@ -15,7 +15,7 @@ async def city_origin():
     return InlineKeyboardMarkup(inline_keyboard=
         [[
         InlineKeyboardButton(text="Иркутск", callback_data=f"city.origin_IKT"),
-        InlineKeyboardButton(text="Москва", callback_data=f"city.origin_MOV"),
+        InlineKeyboardButton(text="Москва", callback_data=f"city.origin_MOW"),
         ],[
         InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"city.origin_LED"),
         InlineKeyboardButton(text="Сочи", callback_data=f"city.origin_AER"),
@@ -30,7 +30,7 @@ async def city_destination(city_origin):
     return InlineKeyboardMarkup(inline_keyboard=
         [[
         InlineKeyboardButton(text="Иркутск", callback_data=f"city.destination_IKT.{city_origin}"),
-        InlineKeyboardButton(text="Москва", callback_data=f"city.destination_MOV.{city_origin}"),
+        InlineKeyboardButton(text="Москва", callback_data=f"city.destination_MOW.{city_origin}"),
         ],[
         InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"city.destination_LED.{city_origin}"),
         InlineKeyboardButton(text="Сочи", callback_data=f"city.destination_AER.{city_origin}"),
