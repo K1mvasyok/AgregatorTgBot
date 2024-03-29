@@ -77,12 +77,14 @@ async def time_day(month_year_city_destination_origin, month, year_offset=0):
     keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
     return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
 
-async def airlines_start(day_month_year_city_destination_origin):
-    buttons = [
-        [InlineKeyboardButton(text="🕒 Выбрать время", callback_data=f"sdgdf")],
-        [InlineKeyboardButton(text="🔁 Спланировать обратный маршрут", callback_data=f"airlines.back_{day_month_year_city_destination_origin}")],
-        [InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]
-    ]
+async def airlines_start(day_month_year_city_destination_origin, links):
+    buttons = []
+    for link in links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        buttons.append([InlineKeyboardButton(text="🔗 Ссылка", url=full_link)])
+    buttons.append([InlineKeyboardButton(text="🔁 Спланировать обратный маршрут", callback_data=f"airlines.back_{day_month_year_city_destination_origin}")])
+    buttons.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
+    
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 # Клавиатура для выбора месяца прилета

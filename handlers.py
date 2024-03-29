@@ -5,6 +5,7 @@ from aiogram.filters import CommandStart
 import datetime
 
 import keyboards as kb
+from aviasales import tickets_for_day
 
 router_u = Router()
 
@@ -62,7 +63,7 @@ async def Time_day_botton(query: CallbackQuery):
 async def Airlines_info(query: CallbackQuery):
     day_month_year_city_destination_origin = query.data.split("_")[1]
     day = int(day_month_year_city_destination_origin.split(".")[0])
-    month = day_month_year_city_destination_origin.split(".")[1]
+    month = int(day_month_year_city_destination_origin.split(".")[1])
     
     now = datetime.datetime.now()
     year_offset = int(day_month_year_city_destination_origin.split(".")[2])
@@ -71,11 +72,14 @@ async def Airlines_info(query: CallbackQuery):
     city_origin = day_month_year_city_destination_origin.split(".")[-1]
     city_destination= day_month_year_city_destination_origin.split(".")[3]
     
+    tickets, links = await tickets_for_day(day, month, year, city_origin, city_destination)
+    
     await query.message.answer(f'Ваши данные:\n\n'
                                f'Дата вылета: {day}.{month}.{year}\n'
                                f'Код города вылета: {city_origin}\n'
-                               f'Код город прилёта: {city_destination}', 
-                               reply_markup=await kb.airlines_start(day_month_year_city_destination_origin))
+                               f'Код город прилёта: {city_destination}\n\n'
+                               f'{tickets}', 
+                               reply_markup=await kb.airlines_start(day_month_year_city_destination_origin, links))
     
 # Продолжение работы с построением маршрутов - месяц прилёта 
 @router_u.callback_query(F.data.startswith("airlines.back_"))
@@ -108,6 +112,8 @@ async def Airlines_back_month(query: CallbackQuery):
     day_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[0])   
     month_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[1])
     
+    tickets = await tickets_for_day(day_start, month_start, year, city_origin, city_destination)
+    
     if datetime.datetime(year, month_start, day_start) >= datetime.datetime(year, month_end, day_end):
         await query.message.answer("Дата отправления должна быть раньше даты прибытия.", reply_markup= await kb.return_to_menu())
         return
@@ -116,5 +122,6 @@ async def Airlines_back_month(query: CallbackQuery):
                                f'Дата вылета: {day_start}.{month_start}.{year}\n'
                                f'Дата прилёта: {day_end}.{month_end}.{year}\n'
                                f'Код города вылета: {city_origin}\n'
-                               f'Код город прилёта: {city_destination}',) 
+                               f'Код город прилёта: {city_destination}\n\n'
+                               f'{tickets}') 
                             #    reply_markup=await kb.airlines_start())
