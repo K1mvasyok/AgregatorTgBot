@@ -31,9 +31,21 @@ def format_flight_info(flight):
     
     departure_at = convert_from_rfc3339(flight['departure_at'])
     
+    if flight['transfers'] == 0:
+        transfers = "🛫 Прямой рейс\n"
+    else:
+        transfers = "🔄 С пересадкой\n"
+    
+    if duration_minutes == 0:
+        duration_info = f"⏳ Длительность: {duration_hours} часов\n"
+    else:
+        duration_info = f"⏳ Длительность: {duration_hours} часов {duration_minutes} минут\n"
+    
     return f"\n✈️ {flight['airline']} {flight['flight_number']}:\n" \
            f"🛫 {flight['origin']} ({flight['origin_airport']}) ➡️ {flight['destination']} ({flight['destination_airport']})\n" \
            f"🕒 Вылет: {departure_at}\n" \
+           f"{transfers}" \
+           f"{duration_info}" \
            f"⏳ Длительность: {duration_hours} часов {duration_minutes} минут\n" \
            f"💰 Цена: {flight['price']} ₽\n" 
 
