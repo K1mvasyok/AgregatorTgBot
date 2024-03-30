@@ -74,12 +74,7 @@ async def Airlines_info(query: CallbackQuery):
     
     tickets, links = await tickets_for_day(day, month, year, city_origin, city_destination)
     
-    await query.message.answer(f'Ваши данные:\n\n'
-                               f'Дата вылета: {day}.{month}.{year}\n'
-                               f'Код города вылета: {city_origin}\n'
-                               f'Код город прилёта: {city_destination}\n\n'
-                               f'{tickets}', 
-                               reply_markup=await kb.airlines_start(day_month_year_city_destination_origin, links))
+    await query.message.answer(f'{tickets}', reply_markup=await kb.airlines_start(day_month_year_city_destination_origin, links))
     
 # Продолжение работы с построением маршрутов - месяц прилёта 
 @router_u.callback_query(F.data.startswith("airlines.back_"))
