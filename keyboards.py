@@ -210,3 +210,19 @@ async def rzd_time_day(month_year_city_destination_origin, month):
     keyboard_rows = [buttons[i:i+7] for i in range(0, days_in_month, 7)]
     keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
     return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
+
+async def choose_city():
+    return InlineKeyboardMarkup(inline_keyboard=
+        [[
+        InlineKeyboardButton(text="Иркутск", callback_data=f"choose.city_IKT"),
+        InlineKeyboardButton(text="Москва", callback_data=f"choose.city_MOW"),
+        ],[
+        InlineKeyboardButton(text="Екатеринбург", callback_data=f"choose.city_SVX"),
+        InlineKeyboardButton(text="Новосибирск", callback_data=f"choose.city_OVB")
+        ],[
+        InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"choose.city_LED"),
+        InlineKeyboardButton(text="Сочи", callback_data=f"choose.city_AER"),
+        ],[                
+        InlineKeyboardButton(text="Омск", callback_data=f"choose.city_OMS")
+        ],[
+        InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
