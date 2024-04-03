@@ -157,3 +157,29 @@ async def Airlines_back_month(query: CallbackQuery):
     keyboard = await kb.airlines_end(selected_links, previous_links, next_links)
     
     await query.message.answer(message, reply_markup=keyboard)
+    
+    
+@router_u.message(F.text == '🚅 Ржд')
+async def Rzd_City_origin_botton(message: Message):
+    await message.answer(f'Выберите город отправления:', reply_markup=await kb.rzd_city_origin())
+    
+@router_u.callback_query(F.data.startswith("rzd.city.origin_"))
+async def Rzd_Airlines_back_month(query: CallbackQuery):
+    city_origin = query.data.split("_")[1]
+    await query.message.answer(f'Выберите город прибытия:', reply_markup=await kb.rzd_city_destination(city_origin))
+    
+@router_u.callback_query(F.data.startswith("rzd.city.destination_"))
+async def Rzd_Time_year_botton(query: CallbackQuery):
+    city_destination_origin = query.data.split("_")[1]
+    city_origin, city_destination = city_destination_origin.rsplit('.', 1)    
+    
+    if city_origin == city_destination:
+        await query.message.answer("Город отправления и город прибытия не могут совпадать.", reply_markup= await kb.return_to_menu())
+        return
+    
+    await query.message.answer(f'Месяц выезда????:', reply_markup=await kb.rzd_time_month(city_destination_origin))
+    
+@router_u.callback_query(F.data.startswith("rzd.time.month_"))
+async def Rzd_Time_month_botton(query: CallbackQuery):
+    year_city_destination_origin = query.data.split("_")[1]
+    await query.message.answer(f'День выезда???:', reply_markup=await kb.time_month(year_city_destination_origin))    
