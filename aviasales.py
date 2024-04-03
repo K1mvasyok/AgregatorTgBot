@@ -54,7 +54,6 @@ def format_flight_info(flight):
            f"{duration_info}" \
            f"💰 Цена: {flight['price']} ₽\n"
 
-
 def format_ticket_info(ticket_data):
     flights_info = ''
     links = []

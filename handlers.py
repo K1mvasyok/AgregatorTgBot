@@ -118,7 +118,7 @@ async def Airlines_back_month(query: CallbackQuery):
     
     city_origin = day_backmonth_day_month_year_city_destination_origin.split(".")[-1]
     city_destination = day_backmonth_day_month_year_city_destination_origin.split(".")[-2]
-     
+    
     now = datetime.datetime.now()
     year_offset = int(day_backmonth_day_month_year_city_destination_origin.split(".")[4])
     year = now.year + year_offset
