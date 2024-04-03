@@ -4,10 +4,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 # Клавиатура - Меню
 async def menu():
     return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="✈️ Построить аэро-маршрут")],
-            [KeyboardButton(text="🚉 Построить железнодорожный маршрут")]]
-        , resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
+        keyboard=[[KeyboardButton(text="✈️ Построить Маршрут")]], resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
 
 # Клавиатура для возврата в меню
 async def return_to_menu():
@@ -80,11 +77,27 @@ async def time_day(month_year_city_destination_origin, month, year_offset=0):
     keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
     return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
 
-async def airlines_start(day_month_year_city_destination_origin, links):
+async def airlines_start(day_month_year_city_destination_origin, selected_links, previous_links, next_links):
     buttons = []
-    for link in links:
+    
+    selected_buttons = []
+    for link in selected_links:
         full_link = "https://aviasales.ru/" + link.lstrip("/")
-        buttons.append([InlineKeyboardButton(text="🔗 Ссылка", url=full_link)])
+        selected_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на выбранный день", url=full_link)])
+    buttons.extend(selected_buttons)
+    
+    previous_buttons = []
+    for link in previous_links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        previous_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на день до", url=full_link)])
+    buttons.extend(previous_buttons)
+    
+    next_buttons = []
+    for link in next_links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        next_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на день после", url=full_link)])
+    buttons.extend(next_buttons)
+    
     buttons.append([InlineKeyboardButton(text="🔁 Спланировать обратный маршрут", callback_data=f"airlines.back_{day_month_year_city_destination_origin}")])
     buttons.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
     
@@ -117,3 +130,28 @@ async def back_day(backmonth_day_month_year_city_destination_origin, month, year
     keyboard_rows = [buttons[i:i+7] for i in range(0, days_in_month, 7)]
     keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
     return InlineKeyboardMarkup(inline_keyboard=keyboard_rows)
+
+async def airlines_end(selected_links, previous_links, next_links):
+    buttons = []
+    
+    selected_buttons = []
+    for link in selected_links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        selected_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на выбранный день", url=full_link)])
+    buttons.extend(selected_buttons)
+    
+    previous_buttons = []
+    for link in previous_links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        previous_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на день до", url=full_link)])
+    buttons.extend(previous_buttons)
+    
+    next_buttons = []
+    for link in next_links:
+        full_link = "https://aviasales.ru/" + link.lstrip("/")
+        next_buttons.append([InlineKeyboardButton(text="🔗 Ссылка на день после", url=full_link)])
+    buttons.extend(next_buttons)
+    
+    buttons.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
+    
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

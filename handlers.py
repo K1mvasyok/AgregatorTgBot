@@ -5,7 +5,7 @@ from aiogram.filters import CommandStart
 import datetime
 
 import keyboards as kb
-from aviasales import tickets_for_day
+from aviasales import tickets_for_day_with_neighbors
 
 router_u = Router()
 
@@ -70,16 +70,21 @@ async def Airlines_info(query: CallbackQuery):
     year = now.year + year_offset
     
     city_origin = day_month_year_city_destination_origin.split(".")[-1]
-    city_destination= day_month_year_city_destination_origin.split(".")[3]
+    city_destination = day_month_year_city_destination_origin.split(".")[3]
     
-    tickets, links = await tickets_for_day(day, month, year, city_origin, city_destination)
+    selected_data, previous_data, next_data = await tickets_for_day_with_neighbors(day, month, year, city_origin, city_destination)
     
-    await query.message.answer(f'Ваши данные:\n\n'
-                               f'Дата вылета: {day}.{month}.{year}\n'
-                               f'Код города вылета: {city_origin}\n'
-                               f'Код город прилёта: {city_destination}\n\n'
-                               f'{tickets}', 
-                               reply_markup=await kb.airlines_start(day_month_year_city_destination_origin, links))
+    selected_info, selected_links = selected_data
+    previous_info, previous_links = previous_data
+    next_info, next_links = next_data
+    
+    message = f"Билеты на выбранный день - {day}.{month}.{year}:\n\n{selected_info}\n"
+    message += f"Билеты на день до - {day-1}.{month}.{year}:\n\n{previous_info}\n"
+    message += f"Билеты на день после - {day+1}.{month}.{year}:\n\n{next_info}"
+    
+    keyboard = await kb.airlines_start(day_month_year_city_destination_origin, selected_links, previous_links, next_links)
+    
+    await query.message.answer(message, reply_markup=keyboard)
     
 # Продолжение работы с построением маршрутов - месяц прилёта 
 @router_u.callback_query(F.data.startswith("airlines.back_"))
@@ -95,6 +100,7 @@ async def Airlines_back_month(query: CallbackQuery):
     backyear = int(backmonth_day_month_year_city_destination_origin.split(".")[2])
     await query.message.answer(f'День прилёта:', reply_markup=await kb.back_day(backmonth_day_month_year_city_destination_origin, backmonth, backyear)) 
     
+# Продолжение работы с построением маршрутов - вывод информаци
 @router_u.callback_query(F.data.startswith("back.day_"))
 async def Airlines_back_month(query: CallbackQuery):
     day_backmonth_day_month_year_city_destination_origin = query.data.split("_")[1]
@@ -112,16 +118,20 @@ async def Airlines_back_month(query: CallbackQuery):
     day_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[0])   
     month_end = int(day_backmonth_day_month_year_city_destination_origin.split(".")[1])
     
-    tickets = await tickets_for_day(day_start, month_start, year, city_origin, city_destination)
-    
     if datetime.datetime(year, month_start, day_start) >= datetime.datetime(year, month_end, day_end):
         await query.message.answer("Дата отправления должна быть раньше даты прибытия.", reply_markup= await kb.return_to_menu())
         return
     
-    await query.message.answer(f'Ваши данные:\n\n'
-                               f'Дата вылета: {day_start}.{month_start}.{year}\n'
-                               f'Дата прилёта: {day_end}.{month_end}.{year}\n'
-                               f'Код города вылета: {city_origin}\n'
-                               f'Код город прилёта: {city_destination}\n\n'
-                               f'{tickets}') 
-                            #    reply_markup=await kb.airlines_start())
+    selected_data, previous_data, next_data  = await tickets_for_day_with_neighbors(day_end, month_end, year, city_origin, city_destination)    
+    
+    selected_info, selected_links = selected_data
+    previous_info, previous_links = previous_data
+    next_info, next_links = next_data
+    
+    message = f"Билеты на выбранный день - {day_end}.{month_end}.{year}:\n\n{selected_info}\n"
+    message += f"Билеты на день до - {day_end-1}.{month_end}.{year}:\n\n{previous_info}\n"
+    message += f"Билеты на день после - {day_end+1}.{month_end}.{year}:\n\n{next_info}"
+    
+    keyboard = await kb.airlines_end(selected_links, previous_links, next_links)
+    
+    await query.message.answer(message, reply_markup=keyboard)
