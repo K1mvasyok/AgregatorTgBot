@@ -56,7 +56,7 @@ def format_flight_info(flight):
 
 
 def format_ticket_info(ticket_data):
-    flights_info = ""
+    flights_info = ''
     links = []
     for flight in ticket_data:
         flights_info += format_flight_info(flight)

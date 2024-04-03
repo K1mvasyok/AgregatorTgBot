@@ -78,10 +78,21 @@ async def Airlines_info(query: CallbackQuery):
     previous_info, previous_links = previous_data
     next_info, next_links = next_data
     
-    message = f"Билеты на выбранный день - {day}.{month}.{year}:\n\n{selected_info}\n"
-    message += f"Билеты на день до - {day-1}.{month}.{year}:\n\n{previous_info}\n"
-    message += f"Билеты на день после - {day+1}.{month}.{year}:\n\n{next_info}"
-    
+    if selected_info:
+        message = f"Билеты на выбранный день - {day}.{month}.{year}:\n\n{selected_info}\n"
+    else:
+        message = f"Нет информации о билетах на выбранный день ({day}.{month}.{year}), посмотрите варианты на ближайшие дни:\n"
+
+    if previous_info:
+        message += f"Билеты на день до - {day}.{month}.{year}:\n\n{previous_info}\n"
+    else:
+        message += ''
+
+    if next_info:
+        message += f"Билеты на день после - {day}.{month}.{year}:\n\n{next_info}"
+    else:
+        message += ''
+
     keyboard = await kb.airlines_start(day_month_year_city_destination_origin, selected_links, previous_links, next_links)
     
     await query.message.answer(message, reply_markup=keyboard)
