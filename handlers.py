@@ -18,21 +18,23 @@ async def Cmd_start(message: Message):
                              f'• Вы сможете увидеть актуальную информацию аэро-маршрутах в России')
     await message.answer(f'🔮 Главное меню', reply_markup=await kb.menu())
 
-# Возврат в меню
+# Возврат в меню 
 @router_u.callback_query(F.data.startswith("return_to_menu"))
 async def Return_to_menu(query: CallbackQuery):
     await query.message.answer('🔮 Главное меню', reply_markup=await kb.menu())
 
 # Реакция на кнопку построить маршрут - города вылета 
-@router_u.message(F.text == '✈️ Построить Маршрут')
+@router_u.message(F.text == '✈️ Аэро маршрут')
 async def Сity_origin_botton(message: Message):
-    await message.answer(f'Выберите город отправления:', reply_markup=await kb.city_origin())
+    # await message.answer(f'Выберите город отправления:', reply_markup=await kb.city_origin())
+    await message.answer(f'Откуда?', reply_markup=await kb.city_origin())
 
 # Продолжение работы с построением маршрутов - города прилёта  
 @router_u.callback_query(F.data.startswith("city.origin_"))
 async def City_destination_botton(query: CallbackQuery):
     city_origin = query.data.split("_")[1]
-    await query.message.answer(f'Выберите город ?прилета?:', reply_markup=await kb.city_destination(city_origin))
+    # await query.message.answer(f'Выберите город ?прилета?:', reply_markup=await kb.city_destination(city_origin))
+    await query.message.answer(f'Куда?', reply_markup=await kb.city_destination(city_origin))
 
 # Продолжение работы с построением маршрутов - год вылета 
 @router_u.callback_query(F.data.startswith("city.destination_"))
@@ -133,7 +135,7 @@ async def Airlines_back_month(query: CallbackQuery):
         await query.message.answer("Дата отправления должна быть раньше даты прибытия.", reply_markup= await kb.return_to_menu())
         return
     
-    selected_data, previous_data, next_data  = await tickets_for_day_with_neighbors(day_end, month_end, year, city_origin, city_destination)    
+    selected_data, previous_data, next_data  = await tickets_for_day_with_neighbors(day_end, month_end, year, city_destination, city_origin)    
     
     selected_info, selected_links = selected_data
     previous_info, previous_links = previous_data
@@ -159,14 +161,16 @@ async def Airlines_back_month(query: CallbackQuery):
     await query.message.answer(message, reply_markup=keyboard)
     
     
-@router_u.message(F.text == '🚅 Ржд')
+@router_u.message(F.text == '🚅 Железнорожный маршрут')
 async def Rzd_City_origin_botton(message: Message):
-    await message.answer(f'Выберите город отправления:', reply_markup=await kb.rzd_city_origin())
+    # await message.answer(f'Выберите город отправления:', reply_markup=await kb.rzd_city_origin())
+    await message.answer(f'Откуда?', reply_markup=await kb.rzd_city_origin())    
     
 @router_u.callback_query(F.data.startswith("rzd.city.origin_"))
 async def Rzd_Airlines_back_month(query: CallbackQuery):
     city_origin = query.data.split("_")[1]
-    await query.message.answer(f'Выберите город прибытия:', reply_markup=await kb.rzd_city_destination(city_origin))
+    # await query.message.answer(f'Выберите город прибытия:', reply_markup=await kb.rzd_city_destination(city_origin))
+    await query.message.answer(f'Куда?', reply_markup=await kb.rzd_city_destination(city_origin))
     
 @router_u.callback_query(F.data.startswith("rzd.city.destination_"))
 async def Rzd_Time_year_botton(query: CallbackQuery):
@@ -177,9 +181,16 @@ async def Rzd_Time_year_botton(query: CallbackQuery):
         await query.message.answer("Город отправления и город прибытия не могут совпадать.", reply_markup= await kb.return_to_menu())
         return
     
-    await query.message.answer(f'Месяц выезда????:', reply_markup=await kb.rzd_time_month(city_destination_origin))
+    await query.message.answer(f'Месяц выезда:', reply_markup=await kb.rzd_time_month(city_destination_origin))
     
 @router_u.callback_query(F.data.startswith("rzd.time.month_"))
 async def Rzd_Time_month_botton(query: CallbackQuery):
     year_city_destination_origin = query.data.split("_")[1]
-    await query.message.answer(f'День выезда???:', reply_markup=await kb.time_month(year_city_destination_origin))    
+    month = int(year_city_destination_origin.split(".")[0])
+    await query.message.answer(f'День выезда:', reply_markup=await kb.rzd_time_day(year_city_destination_origin, month))    
+    
+@router_u.callback_query(F.data.startswith("rzd.time.day_"))
+async def Rzd_Time_day_botton(query: CallbackQuery):
+    day_month_year_city_destination_origin = query.data.split("_")[1]
+    print(day_month_year_city_destination_origin)
+    await query.message.answer(f'Настройка функционала вывода информации о билетах на поезда еще в процессе. 🚂')    

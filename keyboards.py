@@ -4,8 +4,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 # Клавиатура - Меню
 async def menu():
     return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="✈️ Построить Маршрут")],
-                  [KeyboardButton(text="🚅 Ржд")]],
+        keyboard=[[KeyboardButton(text="✈️ Аэро маршрут")],
+                  [KeyboardButton(text="🚅 Железнорожный маршрут")]],
         resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
 
 # Клавиатура для возврата в меню
@@ -162,13 +162,12 @@ async def rzd_city_origin():
     return InlineKeyboardMarkup(inline_keyboard=
         [[
         InlineKeyboardButton(text="Иркутск", callback_data=f"rzd.city.origin_2054001"),
-        InlineKeyboardButton(text="Москва", callback_data=f"rzd.city.origin_MOW"),
+        InlineKeyboardButton(text="Москва", callback_data=f"rzd.city.origin_2000003"),
         ],[
-        # InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"rzd.city.origin_LED"),
-        # InlineKeyboardButton(text="Сочи", callback_data=f"city.origin_AER"),
+        InlineKeyboardButton(text="Екатеринбург", callback_data=f"rzd.city.origin_2030000"),
+        InlineKeyboardButton(text="Новосибирск", callback_data=f"rzd.city.origin_2044001")
         ],[               
-        InlineKeyboardButton(text="Екатеринбург", callback_data=f"city.origin_SVX"),
-        InlineKeyboardButton(text="Новосибирск", callback_data=f"city.origin_OVB")
+        InlineKeyboardButton(text="Омск", callback_data=f"rzd.city.origin_2044700")
         ],[
         InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
 
@@ -176,13 +175,12 @@ async def rzd_city_destination(city_origin):
     return InlineKeyboardMarkup(inline_keyboard=
         [[
         InlineKeyboardButton(text="Иркутск", callback_data=f"rzd.city.destination_2054001.{city_origin}"),
-        InlineKeyboardButton(text="Москва", callback_data=f"city.destination_MOW.{city_origin}"),
+        InlineKeyboardButton(text="Москва", callback_data=f"rzd.city.destination_2000003.{city_origin}"),
         ],[
-        # InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"city.destination_LED.{city_origin}"),
-        # InlineKeyboardButton(text="Сочи", callback_data=f"city.destination_AER.{city_origin}"),
+        InlineKeyboardButton(text="Екатеринбург", callback_data=f"rzd.city.destination_2030000.{city_origin}"),
+        InlineKeyboardButton(text="Новосибирск", callback_data=f"rzd.city.destination_2044001.{city_origin}")
         ],[               
-        InlineKeyboardButton(text="Екатеринбург", callback_data=f"city.destination_SVX.{city_origin}"),
-        InlineKeyboardButton(text="Новосибирск", callback_data=f"city.destination_OVB.{city_origin}")
+        InlineKeyboardButton(text="Омск", callback_data=f"rzd.city.destination_2044700.{city_origin}")
         ],[
         InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
     
@@ -200,15 +198,14 @@ async def rzd_time_month(city_destination_origin):
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-async def rzd_time_day(month_year_city_destination_origin, month, year_offset=0):
+async def rzd_time_day(month_year_city_destination_origin, month):
     now = datetime.datetime.now()
-    year = now.year + year_offset  
+    year = now.year
     next_month = month + 1 if month < 12 else 1  
-    next_year = year + 1 if month == 12 else year 
-    days_in_month = (datetime.date(next_year, next_month, 1) - datetime.date(year, month, 1)).days # Определение количества дней в выбранном месяце
+    days_in_month = (datetime.date(year, next_month, 1) - datetime.date(year, month, 1)).days 
     buttons = []
     for day in range(1, days_in_month + 1):
-        callback_data = f"time.day_{day}.{month_year_city_destination_origin}"
+        callback_data = f"rzd.time.day_{day}.{month_year_city_destination_origin}"
         buttons.append(InlineKeyboardButton(text=str(day), callback_data=callback_data))
     keyboard_rows = [buttons[i:i+7] for i in range(0, days_in_month, 7)]
     keyboard_rows.append([InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")])
