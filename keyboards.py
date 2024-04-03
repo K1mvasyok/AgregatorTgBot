@@ -4,7 +4,10 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 # Клавиатура - Меню
 async def menu():
     return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="✈️ Построить Маршрут")]], resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
+        keyboard=[
+            [KeyboardButton(text="✈️ Построить аэро-маршрут")],
+            [KeyboardButton(text="🚉 Построить железнодорожный маршрут")]]
+        , resize_keyboard=True, input_field_placeholder="Выберите пункт ниже")
 
 # Клавиатура для возврата в меню
 async def return_to_menu():
