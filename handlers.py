@@ -139,9 +139,20 @@ async def Airlines_back_month(query: CallbackQuery):
     previous_info, previous_links = previous_data
     next_info, next_links = next_data
     
-    message = f"Билеты на выбранный день - {day_end}.{month_end}.{year}:\n\n{selected_info}\n"
-    message += f"Билеты на день до - {day_end-1}.{month_end}.{year}:\n\n{previous_info}\n"
-    message += f"Билеты на день после - {day_end+1}.{month_end}.{year}:\n\n{next_info}"
+    if selected_info:
+        message = f"Билеты на выбранный день - {day_end}.{month_end}.{year}:\n\n{selected_info}\n"
+    else:
+        message = f"Нет информации о билетах на выбранный день ({day_end}.{month_end}.{year}), посмотрите варианты на ближайшие дни:\n"
+
+    if previous_info:
+        message += f"Билеты на день до - {day_end}.{month_end}.{year}:\n\n{previous_info}\n"
+    else:
+        message += ''
+
+    if next_info:
+        message += f"Билеты на день после - {day_end}.{month_end}.{year}:\n\n{next_info}"
+    else:
+        message += ''
     
     keyboard = await kb.airlines_end(selected_links, previous_links, next_links)
     
