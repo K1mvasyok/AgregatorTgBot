@@ -41,6 +41,25 @@ async def Choose_city(query: CallbackQuery):
     await query.message.answer(f"Город - {city}\n\nВыберите действие:", reply_markup=await kb.choose_action(city))
     
 @router_a.callback_query(F.data.startswith("choose.attraction.add_"))
-async def Choose_city(query: CallbackQuery):
+async def Choose_city_name(query: CallbackQuery, state: FSMContext):
     city = query.data.split("_")[1]
-    print(city)
+    await state.update_data(city=city)
+    await query.message.answer("Давайте добавим новую достопримечательность. Введите название:")
+    await state.set_state(AddAttractionStates.name)
+    
+@router_a.message(AddAttractionStates.name)
+async def Choose_city_description(message: Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await message.answer("Введите описание:")
+    await state.set_state(AddAttractionStates.description)
+
+    # data = await state.get_data()
+    # await state.clear()
+    
+@router_a.message(AddAttractionStates.description)
+async def Choose_city_description(message: Message, state: FSMContext):
+    await state.update_data(description=message.text)
+    await message.answer("Отправьте фотографию места")  
+    
+    # Не реализованный функционал добавления информации по достопримечательностям 
+    
