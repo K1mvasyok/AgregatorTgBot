@@ -214,15 +214,22 @@ async def rzd_time_day(month_year_city_destination_origin, month):
 async def choose_city():
     return InlineKeyboardMarkup(inline_keyboard=
         [[
-        InlineKeyboardButton(text="Иркутск", callback_data=f"choose.city_IKT"),
-        InlineKeyboardButton(text="Москва", callback_data=f"choose.city_MOW"),
+        InlineKeyboardButton(text="Иркутск", callback_data=f"choose.city_Irkutsk"),
+        InlineKeyboardButton(text="Москва", callback_data=f"choose.city_Moscow"),
         ],[
-        InlineKeyboardButton(text="Екатеринбург", callback_data=f"choose.city_SVX"),
-        InlineKeyboardButton(text="Новосибирск", callback_data=f"choose.city_OVB")
+        InlineKeyboardButton(text="Екатеринбург", callback_data=f"choose.city_Yekaterinburg"),
+        InlineKeyboardButton(text="Новосибирск", callback_data=f"choose.city_Novosibirsk")
         ],[
-        InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"choose.city_LED"),
-        InlineKeyboardButton(text="Сочи", callback_data=f"choose.city_AER"),
+        InlineKeyboardButton(text="Санкт-Петербург", callback_data=f"choose.city_Saint Petersburg"),
+        InlineKeyboardButton(text="Сочи", callback_data=f"choose.city_Sochi"),
         ],[                
-        InlineKeyboardButton(text="Омск", callback_data=f"choose.city_OMS")
+        InlineKeyboardButton(text="Омск", callback_data=f"choose.city_Omsk")
         ],[
         InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])
+    
+async def choose_action(city):
+    keyboard = [
+        InlineKeyboardButton(text="Добавить", callback_data=f"choose.attraction.add_{city}"),
+        InlineKeyboardButton(text="Изменить", callback_data=f"choose.attraction.edit_{city}"),
+        InlineKeyboardButton(text="Удалить", callback_data=f"choose.attraction.delete_{city}")]
+    return InlineKeyboardMarkup(inline_keyboard=[keyboard, [InlineKeyboardButton(text="🏡 Вернуться в меню", callback_data="return_to_menu")]])

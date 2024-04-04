@@ -1,5 +1,7 @@
 from aiogram import F, Router
-from aiogram.types import Message, CallbackQuery, Command
+from aiogram.types import Message, CallbackQuery
+from aiogram.filters import Command
+from aiogram.fsm.state import State, StatesGroup
 
 from aiogram.fsm.context import FSMContext
 
@@ -9,6 +11,12 @@ import keyboards as kb
 
 router_a = Router()
 
+class AddAttractionStates(StatesGroup):
+    city = State()
+    name = State()
+    description = State()
+    photo = State()
+
 @router_a.message(Command("commands"))
 async def start_command(message: Message):
     if message.from_user.id == ADMIN_TELEGRAM_ID:
@@ -16,7 +24,7 @@ async def start_command(message: Message):
                              f"/cities - Информация о городах: Добавить/Изменить/Удалить \n\n"
                              f"/ -  \n\n"
                              f"/ -  \n\n"
-                             f"/-  \n\n")                       
+                             f"/ -  \n\n")                       
     else:
         await message.answer("У вас нет прав на выполнение этой команды.")
         
@@ -29,5 +37,10 @@ async def Сities(message: Message):
         
 @router_a.callback_query(F.data.startswith("choose.city_"))
 async def Choose_city(query: CallbackQuery):
-    city = int(query.data.split("_")[1])
+    city = query.data.split("_")[1]
+    await query.message.answer(f"Город - {city}\n\nВыберите действие:", reply_markup=await kb.choose_action(city))
     
+@router_a.callback_query(F.data.startswith("choose.attraction.add_"))
+async def Choose_city(query: CallbackQuery):
+    city = query.data.split("_")[1]
+    print(city)

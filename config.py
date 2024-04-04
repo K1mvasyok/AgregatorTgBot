@@ -4,4 +4,4 @@ marker = '536117'
 
 SQLALCHEMY_URL = "sqlite+aiosqlite:///db.sqlite"
 
-ADMIN_TELEGRAM_ID = '768886416'
+ADMIN_TELEGRAM_ID = 768886416
